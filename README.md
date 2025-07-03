@@ -23,9 +23,8 @@ Simulate common attacker reconnaissance techniques using Nmap, and detect scan a
 - **Command**:  
   ```bash
   nmap -sS -Pn <target-ip>
-  ![image](https://github.com/user-attachments/assets/378a88a4-b7ac-475d-a33c-95271a21b826)
-
+ 
   Detection:
 1. Some dropped TCP attempts with src-ip, dst-ip, tcp flags (flag S (for SYN) logged in pfirewall.log.
-2. nmap -sS -Pn scanned an open port on Windows VM as seen in the screen shot above, so Event ID: 5156 captured in Security log.
+2. nmap -sS -Pn scanned an open port on Windows VM as shown in the screen shot, so Event ID: 5156 captured in Security log.
    with src-ip, dst-ip, src port, destination port: 3389.
