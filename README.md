@@ -59,3 +59,27 @@ NEGATIVE SCENARIO:
 2. Also outbound rule is set to capture windows response with an ICMP type 3 code 3 destination unreachable on windows firewall.
 3. Nmap report should show 12345/udp closed.
 4. pfirewall log should have DROP UDP entry and Security log should have Event IDs 5152.
+
+### 4 Enable Sysmon Event ID 3 Logging
+🎯 Goal: Detect full TCP connections (like connect scans) on the host
+⚠️ Sysmon will not log dropped or partial (stealth SYN) connections — only established connections.
+Command:
+nmap -sT <target_IP>
+Setup:
+1. Download Sysinternals suite.
+2. With Admin privileges run sysmon64.exe -accepteula -i sysmonconfig-export.xml from path where Sysinternals suite downloaded.
+3. Update sysmon with sysmon-minimal configuration file in order to captutre network connection Event ID 3.
+4. Below is the manual query to filter TCP protocol only events from the logs
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-Sysmon/Operational">
+    <Select Path="Microsoft-Windows-Sysmon/Operational">
+      *[System[(EventID=3)]] and *[EventData[Data[@Name='Protocol']='tcp']]
+    </Select>
+  </Query>
+</QueryList>
+
+### Detection
+1. Perform TCP connect scan on Windows VM from Xubuntu VM.
+2. On Windows VM Navigate to:
+Applications and Services Logs > Microsoft > Windows > Sysmon > Operational
+3. Detect full TCP connections (like connect scans) on the Windows host machine with Event ID 3, Source: Sysmon.
